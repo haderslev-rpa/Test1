@@ -116,6 +116,10 @@ async def process_workqueue(workqueue: Workqueue):
             data = item.data  # dict (deserialiseret JSON)
 
             try:
+                #Overveje her, at lave et print af item id, så man i loggen tydeligt kan se hvilket item der behandles, 
+                # og dermed lettere kan debugge i forhold til det specifikke item i ATS UI'et.
+                # Dog lidt for vondsomt, at hele item.data printes for hvert item, da det kan være meget data og dermed gøre loggen uoverskuelig.
+
                 print("\n========== DEBUG START ==========")
                 print("ORIGINAL item.data:")
                 pprint(item.data)
@@ -136,17 +140,10 @@ async def process_workqueue(workqueue: Workqueue):
 
                 print("\nEFTER update_item_data (lokal variabel data):")
                 pprint(data)
-
-                item.data = data    # data gemmes i item.data 
-
-                print("\nEFTER item.data = data:")
-                pprint(item.data)
                 print("=========== DEBUG SLUT ==========\n")
 
-                
-                
-                
-      
+                item.data = data    # data gemmes i item.data 
+                                                 
                 # Hvis alt er OK, så bruges status fra item data. Hvis intet i item data så bliver message blot "Completed"
 
                 # status ligger i data["status"],

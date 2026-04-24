@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import sys
+from pprint import pprint #Fjernes efter brug hjælper med printing af data i et læsbart format
 
 # Automation Server klienten
 from automation_server_client import (
@@ -23,6 +24,10 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
 )
+logging.getLogger("httpx").setLevel(logging.WARNING)
+logging.getLogger("automation_server_client").setLevel(logging.WARNING)
+logging.getLogger("debugpy").setLevel(logging.WARNING)
+
 
 
 # ---------------------------------------------------------------------------
@@ -106,27 +111,51 @@ async def process_workqueue(workqueue: Workqueue):
         # with item:
         #   - låser item
         #   - hvis der ikke kaldes complete/fail → rollbackes item
+ 
         with item:
             data = item.data  # dict (deserialiseret JSON)
 
             try:
-                # -----------------------------------------------------------
-                # HER LIGGER DIN RIGTIGE FORRETNINGSLLOGIK
-                # Fx:
-                #   response = kald_eksternt_system(data)
-                #   data["process_result"] = response
-                # -----------------------------------------------------------
+                #Overveje her, at lave et print af item id, så man i loggen tydeligt kan se hvilket item der behandles, 
+                # og dermed lettere kan debugge i forhold til det specifikke item i ATS UI'et.
+                # Dog lidt for vondsomt, at hele item.data printes for hvert item, da det kan være meget data og dermed gøre loggen uoverskuelig.
 
+                print("\n========== DEBUG START ==========")
+                print("ORIGINAL item.data:")
+                pprint(item.data)
+
+                # --- din eksisterende logik ---
+                update_item_data(
+                    data,
+                    status_updates={
+                        "status": "Manuel",
+                        "status_kode": "BORGER_UDENFOR_SCOPE"
+                    },
+                    log_entry={
+                        "step": "3.0 Trin 3",
+                        "result": "Manuel",
+                        "note": "Borger udenfor målgruppen"
+                    }
+                )
+
+                print("\nEFTER update_item_data (lokal variabel data):")
+                pprint(data)
+                print("=========== DEBUG SLUT ==========\n")
+
+                item.data = data    # data gemmes i item.data 
+                                                 
                 # Hvis alt er OK, så bruges status fra item data. Hvis intet i item data så bliver message blot "Completed"
 
-                status_updates = data.get("status_updates", {})
+                # status ligger i data["status"],
+                status_dict = data.get("status", {})
 
-                if isinstance(status_updates, dict):
-                    message = status_updates.get("status", "Completed")
+                if isinstance(status_dict, dict):
+                    message = status_dict.get("status", "Completed")
                 else:
                     message = "Completed"
 
                 item.complete(message)
+
 
 
             except WorkItemError as e:
