@@ -24,6 +24,10 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
 )
+logging.getLogger("httpx").setLevel(logging.WARNING)
+logging.getLogger("automation_server_client").setLevel(logging.WARNING)
+logging.getLogger("debugpy").setLevel(logging.WARNING)
+
 
 
 # ---------------------------------------------------------------------------
