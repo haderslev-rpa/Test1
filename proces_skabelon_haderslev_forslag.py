@@ -1,7 +1,6 @@
 import asyncio
 import logging
 import sys
-from pprint import pprint #Fjernes efter brug hjælper med printing af data i et læsbart format
 
 # Automation Server klienten
 from automation_server_client import (
@@ -107,54 +106,27 @@ async def process_workqueue(workqueue: Workqueue):
         # with item:
         #   - låser item
         #   - hvis der ikke kaldes complete/fail → rollbackes item
- 
         with item:
             data = item.data  # dict (deserialiseret JSON)
 
             try:
-                print("\n========== DEBUG START ==========")
-                print("ORIGINAL item.data:")
-                pprint(item.data)
+                # -----------------------------------------------------------
+                # HER LIGGER DIN RIGTIGE FORRETNINGSLLOGIK
+                # Fx:
+                #   response = kald_eksternt_system(data)
+                #   data["process_result"] = response
+                # -----------------------------------------------------------
 
-                # --- din eksisterende logik ---
-                update_item_data(
-                    data,
-                    status_updates={
-                        "status": "Manuel",
-                        "status_kode": "BORGER_UDENFOR_SCOPE"
-                    },
-                    log_entry={
-                        "step": "3.0 Trin 3",
-                        "result": "Manuel",
-                        "note": "Borger udenfor målgruppen"
-                    }
-                )
-
-                print("\nEFTER update_item_data (lokal variabel data):")
-                pprint(data)
-
-                item.data = data    # data gemmes i item.data 
-
-                print("\nEFTER item.data = data:")
-                pprint(item.data)
-                print("=========== DEBUG SLUT ==========\n")
-
-                
-                
-                
-      
                 # Hvis alt er OK, så bruges status fra item data. Hvis intet i item data så bliver message blot "Completed"
 
-                # status ligger i data["status"],
-                status_dict = data.get("status", {})
+                status_updates = data.get("status_updates", {})
 
-                if isinstance(status_dict, dict):
-                    message = status_dict.get("status", "Completed")
+                if isinstance(status_updates, dict):
+                    message = status_updates.get("status", "Completed")
                 else:
                     message = "Completed"
 
                 item.complete(message)
-
 
 
             except WorkItemError as e:
