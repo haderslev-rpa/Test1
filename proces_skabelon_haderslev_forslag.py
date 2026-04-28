@@ -13,7 +13,7 @@ from automation_server_client import (
 
 # DIN EGEN FUNKTION TIL STANDARDISERING AF DATA
 # Denne bruges typisk i QUEUE-MODE (producer)
-from haderlev_vbo import update_item_data
+from Test2.haderlev_vbo import update_item_data
 
 
 # ---------------------------------------------------------------------------

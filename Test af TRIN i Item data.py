@@ -1,6 +1,6 @@
 import json
 from automation_server_client import AutomationServer
-from haderlev_vbo import update_item_data
+from Test2.haderlev_vbo import update_item_data
 
 
 def process_item(item):

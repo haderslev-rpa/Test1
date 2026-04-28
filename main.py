@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import sys
+
 from pprint import pprint #Fjernes efter brug hjælper med printing af data i et læsbart format
 
 # Automation Server klienten
@@ -13,8 +14,8 @@ from automation_server_client import (
 
 # DIN EGEN FUNKTION TIL STANDARDISERING AF DATA
 # Denne bruges typisk i QUEUE-MODE (producer)
-from haderlev_vbo import update_item_data
 
+from q_haderslev_vbo.automation_server.ats_update_item_data import update_item_data
 
 # ---------------------------------------------------------------------------
 # LOGGING
@@ -55,7 +56,7 @@ async def populate_queue(workqueue: Workqueue):
     #   - Test-hardcodet data (som her)
     # -----------------------------------------------------------------------
     raw_items = [
-        {"cpr": "1234567890", "type": "adresseopslag", "note": "Test-item 1"},
+        {"cpr": "1234567891", "type": "adresseopslag", "note": "Test-item 1"},
         {"cpr": "1111111111", "type": "fødselsdato-check", "note": "Test-item 2"},
         {"cpr": "2222222222", "type": "myndighedsopslag", "note": "Test-item 3"},
         {"cpr": "3333333333", "type": "journalopslag", "note": "Test-item 4"},
