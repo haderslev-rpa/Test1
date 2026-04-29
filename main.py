@@ -121,9 +121,10 @@ async def process_workqueue(workqueue: Workqueue):
                 # og dermed lettere kan debugge i forhold til det specifikke item i ATS UI'et.
                 # Dog lidt for vondsomt, at hele item.data printes for hvert item, da det kan være meget data og dermed gøre loggen uoverskuelig.
 
-                print("\n========== DEBUG START ==========")
-                print("ORIGINAL item.data:")
-                pprint(item.data)
+                #print("\n========== DEBUG START ==========")
+                #print("ORIGINAL item.data:")
+                #pprint(item.data)
+                logger.info("Her er en item data log")
 
                 # --- din eksisterende logik ---
                 update_item_data(
@@ -132,20 +133,21 @@ async def process_workqueue(workqueue: Workqueue):
                         "status": "Manuel",
                         "status_kode": "BORGER_UDENFOR_SCOPE"
                     },
-                    log_entry={
-                        "step": "3.0 Trin 3",
-                        "result": "Manuel",
-                        "note": "Borger udenfor målgruppen"
-                    }
+                    #log_entry={
+                    #    "step": "3.0 Trin 3",
+                    #    "result": "Manuel",
+                    #    "note": "Borger udenfor målgruppen"
+                    #}
                 )
-
-                print("\nEFTER update_item_data (lokal variabel data):")
-                pprint(data)
-                print("=========== DEBUG SLUT ==========\n")
-
-                item.data = data    # data gemmes i item.data 
-                                                 
+               
+                
+                from behandel import kør
+                print("starter i main")
+                kør()
+                print("Tilbage i main")
                 # Hvis alt er OK, så bruges status fra item data. Hvis intet i item data så bliver message blot "Completed"
+
+                item.update(data) #update data.
 
                 # status ligger i data["status"],
                 status_dict = data.get("status", {})
