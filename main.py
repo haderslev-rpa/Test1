@@ -1,12 +1,18 @@
 import asyncio
 import logging
 import sys
+from behandel import behandel_page
+
+
+import automation_server_client
+import inspect
 
 from pprint import pprint #Fjernes efter brug hjælper med printing af data i et læsbart format
 
 # Automation Server klienten
 from automation_server_client import (
     AutomationServer,
+    Credential,
     Workqueue,
     WorkItemError,
     WorkItemStatus
@@ -71,12 +77,9 @@ async def populate_queue(workqueue: Workqueue):
         # Her bliver flad input-data konverteret til korrekt item-struktur
         update_item_data(
             data_json,
-            data_updates=raw_item,
-            log_entry={
-                "message": "Item standardiseret",
-                "level": "INFO"
-            }
-        )
+            box_updates=raw_item,
+            update=False,
+            )
 
         # -------------------------------------------------------------------
         # Tilføj item til queue
@@ -84,7 +87,7 @@ async def populate_queue(workqueue: Workqueue):
         # -------------------------------------------------------------------
         workqueue.add_item(
             data=data_json,
-            reference=data_json["data"]["cpr"]
+            reference=data_json["box"]["cpr"]
         )
 
     logger.info(f"{len(raw_items)} items tilføjet til workqueue")
@@ -129,25 +132,20 @@ async def process_workqueue(workqueue: Workqueue):
                 # --- din eksisterende logik ---
                 update_item_data(
                     data,
-                    status_updates={
-                        "status": "Manuel",
-                        "status_kode": "BORGER_UDENFOR_SCOPE"
-                    },
-                    #log_entry={
-                    #    "step": "3.0 Trin 3",
-                    #    "result": "Manuel",
-                    #    "note": "Borger udenfor målgruppen"
-                    #}
+                    item=item,
+                    state="Test af state",
+                    status="Manuel",
+                    status_code="BORGER_UDENFOR_SCOPE"
                 )
                
-                
-                from behandel import kør
                 print("starter i main")
-                kør()
+                behandel_page(item)
+
                 print("Tilbage i main")
                 # Hvis alt er OK, så bruges status fra item data. Hvis intet i item data så bliver message blot "Completed"
 
                 item.update(data) #update data.
+                
 
                 # status ligger i data["status"],
                 status_dict = data.get("status", {})
@@ -181,6 +179,7 @@ if __name__ == "__main__":
     # ATS_URL, ATS_TOKEN, ATS_WORKQUEUE osv.
     ats = AutomationServer.from_environment()
     workqueue = ats.workqueue()
+    credential = Credential.get_credential("API_PRISME365")
 
     # -----------------------------------------------------------------------
     # QUEUE-MODE
