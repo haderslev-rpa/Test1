@@ -53,6 +53,7 @@ def behandel_page(item):
 
         page.goto("https://www.haderslev.dk", wait_until="networkidle")  # goto (åbn side)
         dbg.screenshot(page, "haderslev_forside")  # screenshot (gem billede)
+        log_step(step, "Taget billedet af haderslev_forside")
 
         browser.close()  # close (luk browser)
 
