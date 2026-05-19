@@ -138,7 +138,11 @@ async def process_workqueue(workqueue: Workqueue):
                 )
                
                 print("starter i main")
-                behandel_page(item)
+                
+                import asyncio  # modul (asynkron værktøj)
+
+                await asyncio.to_thread(behandel_page, item)  # to_thread (kør i stråd)
+
 
                 print("Tilbage i main")
                 # Hvis alt er OK, så bruges status fra item data. Hvis intet i item data så bliver message blot "Completed"
