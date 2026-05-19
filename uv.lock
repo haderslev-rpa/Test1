@@ -256,7 +256,7 @@ wheels = [
 [[package]]
 name = "q-haderslev-vbo"
 version = "0.1.1"
-source = { git = "https://github.com/haderslev-rpa/q-haderslev-vbo.git?branch=main#4a26c8ec1a6779cb0bd3de1192a3d69e38085b85" }
+source = { git = "https://github.com/haderslev-rpa/q-haderslev-vbo.git?branch=main#a4c2b117bd78a82053ef91e5a23dc4136b1566d7" }
 
 [[package]]
 name = "typing-extensions"

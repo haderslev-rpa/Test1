@@ -133,9 +133,8 @@ async def process_workqueue(workqueue: Workqueue):
                 update_item_data(
                     data,
                     item=item,
-                    state="Test af state",
-                    status="Manuel",
-                    status_code="BORGER_UDENFOR_SCOPE"
+                    status="Completed",
+                    status_code="Completed"
                 )
                
                 print("starter i main")

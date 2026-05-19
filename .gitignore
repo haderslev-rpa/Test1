@@ -2,3 +2,12 @@
 __pycache__/
 .env
 .vscode/
+debug_playwright/
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
