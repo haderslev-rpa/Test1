@@ -1,4 +1,4 @@
-def behandel_page(item, session, page):
+async def behandel_page(item, session, page):
 
     from q_haderslev_vbo.automation_server.ats_update_item_data import update_item_data
     from q_haderslev_vbo.automation_server.ats_find_state import find_state
@@ -98,6 +98,7 @@ def behandel_page(item, session, page):
         data["box"]["brev_sendt_id"] = 123
         log_step(step, f'ID sat: {data["box"]["brev_sendt_id"]}')
 
+        await session.screenshot(page, "Test")
         update_item_data(data, item=item)
 
         set_state(state)

@@ -7,6 +7,7 @@ from pprint import pprint  # helper (pæn print)
 # 🧠 PROCESS-KODE (ÉT ITEM)
 # ------------------------------------------------------------
 from behandel_sp_list import behandel_sp_list_page  # funktion (genbrugelig kodeblok)
+from behandel import behandel_page  # funktion (genbrugelig kodeblok)
 
 # ------------------------------------------------------------
 # 🧠 AUTOMATION SERVER
@@ -102,7 +103,7 @@ async def process_workqueue(workqueue: Workqueue, debug: bool):
     #
     # ✅ KAN SLETTES i processer uden browser
     # =========================================================
-    session = BrowserSession(headless=True,debug=debug)
+    session = BrowserSession(headless=False,debug=debug)
     await session.start()
     page = await session.new_page()  # Page (browser-fane)
 
@@ -121,7 +122,7 @@ async def process_workqueue(workqueue: Workqueue, debug: bool):
                     # ▶ PROCESS-KODE
                     # (behandel_page bruger Playwright internt)
                     # --------------------------------------------------
-                    behandel_sp_list_page(item=item, session=session, page=page) #Fjern session og page hvis du ikke bruger Playwright i din process
+                    await behandel_page(item=item, session=session, page=page) #Fjern session og page hvis du ikke bruger Playwright i din process
 
                     update_item_data(
                         data,
