@@ -2,6 +2,7 @@
 __pycache__/
 .env
 .vscode/
+tests_local*/
 debug_playwright/
 
 # Playwright
