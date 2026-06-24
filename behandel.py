@@ -5,8 +5,8 @@ async def behandel_page(item, session, page):
     import logging
     logger = logging.getLogger(__name__)
 
-    data = item.data
-
+    data = item.data    
+    print("Er inde på behandel siden")
     """
     PLAYWRIGHT – NY STANDARD (VIGTIGT):
 
@@ -76,14 +76,30 @@ async def behandel_page(item, session, page):
     def har_state(state):
         return find_state(data, search_text=state)
 
-    def mangler_state(state):
-        return not har_state(state)
+    def mangler_state(state, step):
+        states = data.get("state", [])
+
+        # find state entry
+        match = next((s for s in states if state in s), None)
+
+        if match:
+            # extract tid (sidste del)
+            try:
+                time_part = match.split()[-1][:5]  # HH:MM
+            except:
+                time_part = "?"
+
+            log_step(step, f"Skip ({state} @{time_part})")
+            return False
+
+        return True
 
     def set_state(state):
         update_item_data(data, item=item, state=state)
-
+    
     def log_step(step, text):
-        logger.info(f"[{step}] {text}")
+        print(f"➡️ [{step}] {text}")
+
 
 
     # ==========================================================
@@ -91,7 +107,7 @@ async def behandel_page(item, session, page):
     # ==========================================================
     state = getattr(States, step)
 
-    if mangler_state(state):
+    if mangler_state(state, step):
 
         log_step(step, "Start")
 
@@ -109,7 +125,7 @@ async def behandel_page(item, session, page):
     # ==========================================================
     state = getattr(States, step)
 
-    if mangler_state(state):
+    if mangler_state(state, step):
 
         log_step(step, "Start")
 
@@ -126,7 +142,7 @@ async def behandel_page(item, session, page):
     # ==========================================================
     state = getattr(States, step)
 
-    if mangler_state(state):
+    if mangler_state(state, step):
 
         log_step(step, "Start")
 

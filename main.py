@@ -8,7 +8,7 @@ from pprint import pprint  # helper (pæn print)
 # 🧠 PROCESS-KODE (ÉT ITEM)
 # ------------------------------------------------------------
 from behandel_sp_list import behandel_sp_list_page  # funktion (genbrugelig kodeblok)
-from behandel import behandel_page  # funktion (genbrugelig kodeblok)
+##from behandel import behandel_page  # funktion (genbrugelig kodeblok)
 
 # ------------------------------------------------------------
 # 🧠 AUTOMATION SERVER
@@ -53,20 +53,18 @@ async def populate_queue(workqueue: Workqueue, debug: bool):
     test_items = [
         {
             "Title": "TEST ATS CREATE 1",
+            "id": 16,
             "Beløb": 100,
-            "Kaffe": True,
-            "Godkendt?": True,
+            "Godkendt?": "Ja",
             "Hardware": "Valg 1",
             "Sagsbehandler - Initialer": "TS1"
         },
-        {
-            "Title": "TEST ATS CREATE 2",
-            "Beløb": 200,
-            "Kaffe": False,
-            "Godkendt?": False,
-            "Hardware": "Valg 2",
-            "Sagsbehandler - Initialer": "TS2"
-        }
+        #{
+        #    "Title": "TEST ATS CREATE 2",
+        #    "Beløb": 200,
+        #    "Hardware": "Valg 2",
+        #    "Sagsbehandler - Initialer": "TS2"
+        #}
     ]
 
     for sp_data in test_items:
@@ -87,6 +85,7 @@ async def populate_queue(workqueue: Workqueue, debug: bool):
         )
 
     logger.info(f"{len(test_items)} items tilføjet")
+    print(f"{len(test_items)} items tilføjet")
 
 
 
@@ -124,7 +123,7 @@ async def process_workqueue(workqueue: Workqueue, debug: bool):
                     # ▶ PROCESS-KODE
                     # (behandel_page bruger Playwright internt)
                     # --------------------------------------------------
-                    await behandel_page(item=item, session=session, page=page) #Fjern session og page hvis du ikke bruger Playwright i din process
+                    await behandel_sp_list_page(item=item, session=session, page=page) #Fjern session og page hvis du ikke bruger Playwright i din process
 
                     update_item_data(
                         data,
